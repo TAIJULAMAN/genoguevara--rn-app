@@ -8,16 +8,96 @@ import {
     TouchableOpacity,
     View,
     KeyboardAvoidingView,
+    Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useAppContext } from '../../context/AppContext';
 
 export default function WriteInAppScreen() {
     const router = useRouter();
+    const { addJournalEntry } = useAppContext();
     const [note, setNote] = useState('');
-    const [timeLeft, setTimeLeft] = useState(1200); // 20 minutes in seconds
+    const [timeLeft, setTimeLeft] = useState(1200);
+
+    const handleSave = () => {
+        if (note.trim().length === 0) {
+            if (Platform.OS === 'web') {
+                alert('Please write something before saving.');
+            } else {
+                Alert.alert('Empty Note', 'Please write something before saving.');
+            }
+            return;
+        }
+
+        addJournalEntry({
+            title: 'Two-Way Prayer',
+            preview: note.substring(0, 100) + (note.length > 100 ? '...' : ''),
+            content: note,
+            type: 'morning',
+        });
+
+        router.push('/check-guidance');
+    };
+    const [isListening, setIsListening] = useState(false);
+    const [recognition, setRecognition] = useState<any>(null);
 
     const Container = Platform.OS === 'web' ? View : SafeAreaView;
+
+    // Initialize Speech Recognition
+    useEffect(() => {
+        if (Platform.OS === 'web' && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+            const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+            const recognitionInstance = new SpeechRecognition();
+
+            recognitionInstance.continuous = true;
+            recognitionInstance.interimResults = true;
+            recognitionInstance.lang = 'en-US';
+
+            recognitionInstance.onresult = (event: any) => {
+                let finalTranscript = '';
+
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                    }
+                }
+
+                if (finalTranscript) {
+                    setNote(prev => prev + (prev.length > 0 ? ' ' : '') + finalTranscript);
+                }
+            };
+
+            recognitionInstance.onend = () => {
+                setIsListening(false);
+            };
+
+            recognitionInstance.onerror = (event: any) => {
+                console.error('Speech recognition error:', event.error);
+                setIsListening(false);
+            };
+
+            setRecognition(recognitionInstance);
+        }
+    }, []);
+
+    const toggleListening = () => {
+        if (!recognition) {
+            alert('Speech recognition is not supported in this browser.');
+            return;
+        }
+
+        if (isListening) {
+            recognition.stop();
+        } else {
+            try {
+                recognition.start();
+                setIsListening(true);
+            } catch (error) {
+                console.error('Failed to start recognition:', error);
+            }
+        }
+    };
 
     // Helper to format time
     const formatTime = (seconds: number) => {
@@ -56,10 +136,17 @@ export default function WriteInAppScreen() {
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Two-Way Prayer</Text>
                 <View style={styles.headerActions}>
-                    <TouchableOpacity style={styles.actionButton}>
-                        <Text style={styles.actionIcon}>🎤</Text>
+                    <TouchableOpacity
+                        style={[styles.actionButton, isListening && styles.actionButtonActive]}
+                        onPress={toggleListening}
+                    >
+                        <Text style={[styles.actionIcon, isListening && styles.actionIconActive]}>🎤</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.actionButton}>
+                    <TouchableOpacity
+                        style={styles.actionButton}
+                        onPress={handleSave}
+                        activeOpacity={0.7}
+                    >
                         <View style={styles.checkCircle}>
                             <Text style={styles.checkIcon}>✓</Text>
                         </View>
@@ -163,9 +250,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    actionButtonActive: {
+        backgroundColor: '#FFD54F',
+    },
     actionIcon: {
         fontSize: 20,
         color: '#FFD54F',
+    },
+    actionIconActive: {
+        color: '#000000',
     },
     checkCircle: {
         width: 44,

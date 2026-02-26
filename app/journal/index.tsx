@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useAppContext } from '../../context/AppContext';
 
 type JournalEntry = {
     id: string;
@@ -52,7 +53,8 @@ function getTypeIcon(type: JournalEntry['type']): string {
 
 export default function JournalScreen() {
     const router = useRouter();
-    const [entries] = useState<JournalEntry[]>(SAMPLE_ENTRIES);
+    const { journalEntries } = useAppContext();
+    const allEntries = [...journalEntries, ...SAMPLE_ENTRIES];
 
     const Container = Platform.OS === 'web' ? View : SafeAreaView;
 
@@ -84,7 +86,7 @@ export default function JournalScreen() {
 
             {/* Entries List */}
             <FlatList
-                data={entries}
+                data={allEntries}
                 renderItem={renderEntry}
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={styles.listContent}
