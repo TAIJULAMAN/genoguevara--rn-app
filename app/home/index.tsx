@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import {
     ImageBackground,
+    Modal,
     Platform,
+    Pressable,
     StyleSheet,
     Text,
     TouchableOpacity,
     View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native';
+import { useRouter } from 'expo-router';
 
 type Tab = 'morning' | 'midday' | 'night';
 
@@ -49,6 +52,8 @@ function getFormattedDate(): string {
 
 export default function HomeScreen() {
     const [activeTab, setActiveTab] = useState<Tab>('morning');
+    const [menuOpen, setMenuOpen] = useState(false);
+    const router = useRouter();
 
     const Container = Platform.OS === 'web' ? View : SafeAreaView;
 
@@ -62,10 +67,46 @@ export default function HomeScreen() {
                 {/* Header */}
                 <View style={styles.header}>
                     <Text style={styles.title}>{getTitle(activeTab)}</Text>
-                    <TouchableOpacity style={styles.menuButton} activeOpacity={0.7}>
+                    <TouchableOpacity
+                        style={styles.menuButton}
+                        activeOpacity={0.7}
+                        onPress={() => setMenuOpen(true)}
+                    >
                         <Text style={styles.menuDots}>•••</Text>
                     </TouchableOpacity>
                 </View>
+
+                {/* Dropdown Menu */}
+                <Modal
+                    visible={menuOpen}
+                    transparent
+                    animationType="fade"
+                    onRequestClose={() => setMenuOpen(false)}
+                >
+                    <Pressable style={styles.overlay} onPress={() => setMenuOpen(false)}>
+                        <View style={styles.dropdown}>
+                            <TouchableOpacity
+                                style={styles.dropdownItem}
+                                activeOpacity={0.7}
+                                onPress={() => { setMenuOpen(false); router.push('/journal'); }}
+                            >
+                                <Text style={styles.dropdownIcon}>📖</Text>
+                                <Text style={styles.dropdownLabel}>Journal</Text>
+                            </TouchableOpacity>
+
+                            <View style={styles.dropdownDivider} />
+
+                            <TouchableOpacity
+                                style={styles.dropdownItem}
+                                activeOpacity={0.7}
+                                onPress={() => { setMenuOpen(false); router.push('/settings'); }}
+                            >
+                                <Text style={styles.dropdownIcon}>⚙️</Text>
+                                <Text style={styles.dropdownLabel}>Settings</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Pressable>
+                </Modal>
 
                 {/* Center Content */}
                 <View style={styles.centerContent}>
@@ -158,6 +199,46 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#333333',
         letterSpacing: 2,
+    },
+    overlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-end',
+        paddingTop: Platform.OS === 'web' ? 70 : 90,
+        paddingRight: 24,
+    },
+    dropdown: {
+        backgroundColor: 'rgba(20, 30, 55, 0.92)',
+        borderRadius: 16,
+        paddingVertical: 8,
+        paddingHorizontal: 6,
+        minWidth: 180,
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.3,
+        shadowRadius: 20,
+        elevation: 12,
+    },
+    dropdownItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 16,
+        paddingHorizontal: 16,
+        gap: 14,
+    },
+    dropdownIcon: {
+        fontSize: 22,
+    },
+    dropdownLabel: {
+        fontSize: 18,
+        fontWeight: '500',
+        color: '#ffffff',
+    },
+    dropdownDivider: {
+        height: 1,
+        backgroundColor: 'rgba(255, 255, 255, 0.12)',
+        marginHorizontal: 16,
     },
     centerContent: {
         flex: 1,

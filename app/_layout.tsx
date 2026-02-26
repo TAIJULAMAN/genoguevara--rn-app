@@ -8,6 +8,9 @@ export default function RootLayout() {
             <Stack.Screen name="reminders/index" />
             <Stack.Screen name="selection/index" />
             <Stack.Screen name="home/index" />
+            <Stack.Screen name="journal/index" />
+            <Stack.Screen name="settings/index" />
+            <Stack.Screen name="notifications/index" />
         </Stack>
     );
 }
