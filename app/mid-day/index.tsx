@@ -13,40 +13,6 @@ import { SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAppContext } from '../../context/AppContext';
 
-type Tab = 'morning' | 'midday' | 'night';
-
-const TAB_CONFIG: Record<Tab, {
-    greeting: string;
-    title: string;
-    icon: string;
-    label: string;
-    background: any;
-}> = {
-    morning: {
-        greeting: 'Good Morning.',
-        title: 'Morning',
-        icon: '☀️',
-        label: 'Morning',
-        background: require('../../assets/mbg.png'),
-    },
-    midday: {
-        greeting: 'Good Afternoon.',
-        title: 'Mid Day',
-        icon: '⚙️',
-        label: 'Mid Day',
-        background: require('../../assets/nbg.png'),
-    },
-    night: {
-        greeting: 'Good Evening.',
-        title: 'Night',
-        icon: '🌙',
-        label: 'Night',
-        background: require('../../assets/night.png'),
-    },
-};
-
-const TABS: Tab[] = ['morning', 'midday', 'night'];
-
 function getFormattedDate(): string {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const months = [
@@ -61,25 +27,23 @@ function getFormattedDate(): string {
     return `Today is ${day}, ${date} ${month}, ${year}`;
 }
 
-export default function HomeScreen() {
+export default function MidDayScreen() {
     const { selectedPath } = useAppContext();
-    const [activeTab, setActiveTab] = useState<Tab>('morning');
     const [menuOpen, setMenuOpen] = useState(false);
     const router = useRouter();
 
     const Container = Platform.OS === 'web' ? View : SafeAreaView;
-    const config = TAB_CONFIG[activeTab];
 
     return (
         <ImageBackground
-            source={config.background}
+            source={require('../../assets/nbg.png')}
             style={styles.background}
             resizeMode="cover"
         >
             <Container style={styles.container}>
                 {/* Header */}
                 <View style={styles.header}>
-                    <Text style={styles.title}>{config.title}</Text>
+                    <Text style={styles.title}>Mid Day</Text>
                     <TouchableOpacity
                         style={styles.menuButton}
                         activeOpacity={0.7}
@@ -123,19 +87,16 @@ export default function HomeScreen() {
 
                 {/* Center Content */}
                 <View style={styles.centerContent}>
-                    <Text style={styles.greeting}>{config.greeting}</Text>
+                    <Text style={styles.greeting}>Good Afternoon.</Text>
                     <Text style={styles.dateText}>{getFormattedDate()}</Text>
-
-                    {/* Mood Label */}
-                    <Text style={styles.moodLabel}>
-                        {selectedPath === 'dr_bob' ? '🙏 Dr. Bob Mode' : '📖 Big Book Thumper'}
-                    </Text>
 
                     {/* Start Button */}
                     <TouchableOpacity
                         style={styles.startOuterCircle}
                         activeOpacity={0.8}
                         onPress={() => {
+                            // Mid day could go to a specific midday routine if implemented
+                            // For now, staying consistent with path selection
                             if (selectedPath === 'dr_bob') {
                                 router.push('/dr-bob');
                             } else {
@@ -151,35 +112,30 @@ export default function HomeScreen() {
 
                 {/* Bottom Tab Bar */}
                 <View style={styles.tabBar}>
-                    {TABS.map((tab) => {
-                        const tabConfig = TAB_CONFIG[tab];
-                        const isActive = activeTab === tab;
+                    <TouchableOpacity
+                        style={styles.tab}
+                        onPress={() => router.push('/home')}
+                        activeOpacity={0.7}
+                    >
+                        <Text style={styles.tabIcon}>☀️</Text>
+                        <Text style={styles.tabLabel}>Morning</Text>
+                    </TouchableOpacity>
 
-                        return (
-                            <TouchableOpacity
-                                key={tab}
-                                style={[styles.tab, isActive && styles.tabActive]}
-                                onPress={() => setActiveTab(tab)}
-                                activeOpacity={0.7}
-                            >
-                                {isActive ? (
-                                    <View style={styles.activeTabIndicator}>
-                                        <Text style={[styles.tabIcon, styles.tabIconActive]}>
-                                            {tabConfig.icon}
-                                        </Text>
-                                        <Text style={[styles.tabLabel, styles.tabLabelActive]}>
-                                            {tabConfig.label}
-                                        </Text>
-                                    </View>
-                                ) : (
-                                    <>
-                                        <Text style={styles.tabIcon}>{tabConfig.icon}</Text>
-                                        <Text style={styles.tabLabel}>{tabConfig.label}</Text>
-                                    </>
-                                )}
-                            </TouchableOpacity>
-                        );
-                    })}
+                    <View style={[styles.tab, styles.tabActive]}>
+                        <View style={styles.activeTabIndicator}>
+                            <Text style={[styles.tabIcon, styles.tabIconActive]}>⚙️</Text>
+                            <Text style={[styles.tabLabel, styles.tabLabelActive]}>Mid Day</Text>
+                        </View>
+                    </View>
+
+                    <TouchableOpacity
+                        style={styles.tab}
+                        onPress={() => { }}
+                        activeOpacity={0.7}
+                    >
+                        <Text style={styles.tabIcon}>🌙</Text>
+                        <Text style={styles.tabLabel}>Night</Text>
+                    </TouchableOpacity>
                 </View>
             </Container>
         </ImageBackground>
@@ -206,13 +162,13 @@ const styles = StyleSheet.create({
     title: {
         fontFamily: 'Inter_800ExtraBold',
         fontSize: 32,
-        color: '#000000',
+        color: '#000000', // Making it darker as per screenshot
     },
     menuButton: {
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: 'rgba(0, 0, 0, 0.08)',
+        backgroundColor: 'rgba(0, 0, 0, 0.12)',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -277,18 +233,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Inter_400Regular',
         fontSize: 14,
         color: '#1a1a1a',
-        marginBottom: 24,
-    },
-    moodLabel: {
-        fontFamily: 'Inter_600SemiBold',
-        fontSize: 14,
-        color: 'rgba(0, 0, 0, 0.55)',
-        marginBottom: 32,
-        paddingHorizontal: 16,
-        paddingVertical: 6,
-        backgroundColor: 'rgba(255, 255, 255, 0.45)',
-        borderRadius: 20,
-        overflow: 'hidden',
+        marginBottom: 48,
     },
     startOuterCircle: {
         width: 140,

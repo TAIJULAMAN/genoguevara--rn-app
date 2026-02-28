@@ -8,14 +8,14 @@ import {
 import { SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 
-export default function DrBobModeScreen() {
+export default function FinalPrayerScreen() {
     const router = useRouter();
 
     const Container = Platform.OS === 'web' ? View : SafeAreaView;
 
     return (
         <Container style={styles.container}>
-            {/* Header with back button */}
+            {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity
                     onPress={() => router.back()}
@@ -24,30 +24,40 @@ export default function DrBobModeScreen() {
                 >
                     <Text style={styles.backArrow}>‹</Text>
                 </TouchableOpacity>
+                <Text style={styles.headerTitle}>Final Prayer & Send-Off</Text>
+                <View style={styles.placeholder} />
             </View>
 
             {/* Title Section */}
             <View style={styles.titleSection}>
-                <Text style={styles.title}>Dr. Bob's Morning Quiet Time</Text>
+                <Text style={styles.title}>
+                    When A Man Listens, God Speaks, When Man Obeys, God Moves.
+                </Text>
                 <View style={styles.goldUnderline} />
             </View>
 
-            {/* Center Content */}
-            <View style={styles.centerContent}>
-                <Text style={styles.greeting}>Good morning.</Text>
-                <Text style={styles.description}>
-                    Let's begin our morning quiet time of prayer, reading, meditation, guidance, testing, and obeying.
+            {/* Prayer Section */}
+            <View style={styles.prayerSection}>
+                <Text style={styles.prayerText}>
+                    God, I thank You for what You showed me this morning, give me strength to do your will{'\n'}____not mine.
                 </Text>
             </View>
 
-            {/* Continue Button */}
+            {/* Send-Off Text */}
+            <View style={styles.sendOffSection}>
+                <Text style={styles.sendOffText}>
+                    Now go forth in faith, trusting His guidance.
+                </Text>
+            </View>
+
+            {/* Finish Button */}
             <View style={styles.bottomSection}>
                 <TouchableOpacity
-                    style={styles.continueButton}
+                    style={styles.finishButton}
+                    onPress={() => router.push('/finish')}
                     activeOpacity={0.8}
-                    onPress={() => router.push('/be-still')}
                 >
-                    <Text style={styles.continueText}>Continue</Text>
+                    <Text style={styles.finishButtonText}>Finish</Text>
                 </TouchableOpacity>
             </View>
         </Container>
@@ -63,6 +73,7 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
         paddingHorizontal: 20,
         paddingTop: 20,
         paddingBottom: 8,
@@ -81,6 +92,14 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         marginTop: -2,
     },
+    headerTitle: {
+        fontFamily: 'Inter_600SemiBold',
+        fontSize: 18,
+        color: '#ffffff',
+    },
+    placeholder: {
+        width: 36,
+    },
     titleSection: {
         paddingHorizontal: 24,
         paddingTop: 16,
@@ -88,9 +107,10 @@ const styles = StyleSheet.create({
     },
     title: {
         fontFamily: 'Inter_700Bold',
-        fontSize: 28,
+        fontSize: 24,
         color: '#ffffff',
         marginBottom: 10,
+        lineHeight: 34,
     },
     goldUnderline: {
         height: 4,
@@ -98,39 +118,46 @@ const styles = StyleSheet.create({
         borderRadius: 2,
         width: '100%',
     },
-    centerContent: {
+    prayerSection: {
         flex: 1,
-        paddingHorizontal: 32,
+        backgroundColor: '#2C2208',
+        marginTop: 16,
+        paddingHorizontal: 24,
+        paddingTop: 48,
+        paddingBottom: 48,
+        justifyContent: 'center',
+    },
+    prayerText: {
+        fontFamily: 'Inter_400Regular',
+        fontSize: 28,
+        color: '#D4A843',
+        lineHeight: 44,
+    },
+    sendOffSection: {
+        paddingHorizontal: 24,
         paddingTop: 32,
+        paddingBottom: 16,
         alignItems: 'center',
     },
-    greeting: {
-        fontFamily: 'Inter_700Bold',
-        fontSize: 18,
-        color: '#ffffff',
-        marginBottom: 20,
-        textAlign: 'center',
-    },
-    description: {
+    sendOffText: {
         fontFamily: 'Inter_400Regular',
-        fontSize: 17,
+        fontSize: 16,
         color: '#ffffff',
         textAlign: 'center',
-        lineHeight: 28,
+        lineHeight: 24,
     },
     bottomSection: {
         paddingHorizontal: 24,
         paddingBottom: 40,
+        paddingTop: 8,
     },
-    continueButton: {
+    finishButton: {
         backgroundColor: '#E8B931',
-        width: '100%',
         paddingVertical: 18,
         borderRadius: 30,
         alignItems: 'center',
-        justifyContent: 'center',
     },
-    continueText: {
+    finishButtonText: {
         fontFamily: 'Inter_700Bold',
         fontSize: 18,
         color: '#000000',
