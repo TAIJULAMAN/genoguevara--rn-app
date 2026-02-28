@@ -79,13 +79,13 @@ export default function HomeScreen() {
             <Container style={styles.container}>
                 {/* Header */}
                 <View style={styles.header}>
-                    <Text style={styles.title}>{config.title}</Text>
+                    <Text style={[styles.title, activeTab === 'night' && { color: '#ffffff' }]}>{config.title}</Text>
                     <TouchableOpacity
                         style={styles.menuButton}
                         activeOpacity={0.7}
                         onPress={() => setMenuOpen(true)}
                     >
-                        <Text style={styles.menuDots}>•••</Text>
+                        <Text style={[styles.menuDots, activeTab === 'night' && { color: '#ffffff' }]}>•••</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -123,11 +123,11 @@ export default function HomeScreen() {
 
                 {/* Center Content */}
                 <View style={styles.centerContent}>
-                    <Text style={styles.greeting}>{config.greeting}</Text>
-                    <Text style={styles.dateText}>{getFormattedDate()}</Text>
+                    <Text style={[styles.greeting, activeTab === 'night' && { color: '#ffffff' }]}>{config.greeting}</Text>
+                    <Text style={[styles.dateText, activeTab === 'night' && { color: '#cccccc' }]}>{getFormattedDate()}</Text>
 
                     {/* Mood Label */}
-                    <Text style={styles.moodLabel}>
+                    <Text style={[styles.moodLabel, activeTab === 'night' && { color: 'rgba(255,255,255,0.8)', backgroundColor: 'rgba(255,255,255,0.15)' }]}>
                         {selectedPath === 'dr_bob' ? '🙏 Dr. Bob Mode' : '📖 Big Book Thumper'}
                     </Text>
 
