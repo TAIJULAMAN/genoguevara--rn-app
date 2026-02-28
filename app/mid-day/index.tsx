@@ -65,7 +65,7 @@ export default function MidDayScreen() {
                             <TouchableOpacity
                                 style={styles.dropdownItem}
                                 activeOpacity={0.7}
-                                onPress={() => { setMenuOpen(false); router.push('/journal'); }}
+                                onPress={() => { setMenuOpen(false); router.push('/settings/journal'); }}
                             >
                                 <Text style={styles.dropdownIcon}>📖</Text>
                                 <Text style={styles.dropdownLabel}>Journal</Text>
@@ -95,12 +95,10 @@ export default function MidDayScreen() {
                         style={styles.startOuterCircle}
                         activeOpacity={0.8}
                         onPress={() => {
-                            // Mid day could go to a specific midday routine if implemented
-                            // For now, staying consistent with path selection
                             if (selectedPath === 'dr_bob') {
-                                router.push('/dr-bob');
+                                router.push('/morning/dr-bob');
                             } else {
-                                router.push('/big-book');
+                                router.push('/morning/big-book');
                             }
                         }}
                     >

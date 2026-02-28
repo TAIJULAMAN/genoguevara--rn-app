@@ -87,7 +87,7 @@ export default function SettingsScreen() {
                 <TouchableOpacity
                     style={styles.menuRow}
                     activeOpacity={0.7}
-                    onPress={() => router.push('/notifications')}
+                    onPress={() => router.push('/settings/notifications')}
                 >
                     <Text style={styles.menuIcon}>🔔</Text>
                     <Text style={styles.menuLabel}>Notifications</Text>
@@ -99,7 +99,7 @@ export default function SettingsScreen() {
                 <TouchableOpacity
                     style={styles.menuRow}
                     activeOpacity={0.7}
-                    onPress={() => router.push('/scriptures')}
+                    onPress={() => router.push('/settings/scriptures')}
                 >
                     <Text style={styles.menuIcon}>📖</Text>
                     <Text style={styles.menuLabel}>Scriptures</Text>

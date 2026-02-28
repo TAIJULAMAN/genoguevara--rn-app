@@ -24,23 +24,14 @@ export default function RootLayout() {
         <AppProvider>
             <Stack screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="index" />
-                <Stack.Screen name="welcome/index" />
-                <Stack.Screen name="reminders/index" />
-                <Stack.Screen name="selection/index" />
+                <Stack.Screen name="welcome" />
                 <Stack.Screen name="home/index" />
-                <Stack.Screen name="journal/index" />
-                <Stack.Screen name="settings/index" />
-                <Stack.Screen name="notifications/index" />
-                <Stack.Screen name="scriptures/index" />
-                <Stack.Screen name="dr-bob/index" />
-                <Stack.Screen name="big-book/index" />
-                <Stack.Screen name="meditation/index" />
-                <Stack.Screen name="capture-inspiration/index" />
-                <Stack.Screen name="plan-the-day/index" />
-                <Stack.Screen name="check-guidance/index" />
-                <Stack.Screen name="obey-and-act/index" />
+                <Stack.Screen name="settings" />
                 <Stack.Screen name="finish/index" />
-                <Stack.Screen name="write-in-app/index" />
+                <Stack.Screen name="morning" />
+                <Stack.Screen name="midday" />
+                <Stack.Screen name="night" />
+                <Stack.Screen name="mid-day/index" />
             </Stack>
         </AppProvider>
     );

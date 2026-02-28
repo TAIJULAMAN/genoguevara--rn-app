@@ -45,7 +45,7 @@ export default function DrBobModeScreen() {
                 <TouchableOpacity
                     style={styles.continueButton}
                     activeOpacity={0.8}
-                    onPress={() => router.push('/be-still')}
+                    onPress={() => router.push('/morning/dr-bob/be-still')}
                 >
                     <Text style={styles.continueText}>Continue</Text>
                 </TouchableOpacity>

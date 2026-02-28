@@ -14,29 +14,24 @@ import { Audio } from 'expo-av';
 
 type TimerOption = 2 | 5 | 10;
 
-export default function MeditationScreen() {
+export default function AnchorInWordsScreen() {
     const router = useRouter();
     const [selectedTimer, setSelectedTimer] = useState<TimerOption>(2);
     const [isRunning, setIsRunning] = useState(false);
     const [timeLeft, setTimeLeft] = useState(0);
-    // Use a ref for sound to handle audio lifecycle without triggering re-renders
     const soundRef = useRef<Audio.Sound | null>(null);
 
     const Container = Platform.OS === 'web' ? View : SafeAreaView;
 
-    // Helper to format time
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     };
 
-    // Timer logic
     useEffect(() => {
         let interval: NodeJS.Timeout | null = null;
-
         if (isRunning) {
-            console.log('Timer starting...');
             interval = setInterval(() => {
                 setTimeLeft((prev) => {
                     if (prev <= 1) {
@@ -47,12 +42,8 @@ export default function MeditationScreen() {
                 });
             }, 1000);
         }
-
         return () => {
-            if (interval) {
-                console.log('Cleaning up interval');
-                clearInterval(interval);
-            }
+            if (interval) clearInterval(interval);
         };
     }, [isRunning]);
 
@@ -62,17 +53,14 @@ export default function MeditationScreen() {
     };
 
     async function playAudio() {
-        console.log('Attempting to load local meditation audio');
         try {
             const { sound: newSound } = await Audio.Sound.createAsync(
                 require('../../assets/meditation.mp3'),
                 { shouldPlay: true, isLooping: true }
             );
             soundRef.current = newSound;
-            console.log('Audio playing successfully');
         } catch (error) {
-            console.error('Error loading local audio:', error);
-            alert('Could not play meditation.mp3. Please check if it exists in the assets folder.');
+            console.error('Error loading audio:', error);
             setIsRunning(false);
         }
     }
@@ -97,7 +85,6 @@ export default function MeditationScreen() {
         }
     };
 
-    // Global cleanup on unmount only
     useEffect(() => {
         return () => {
             if (soundRef.current) {
@@ -108,38 +95,32 @@ export default function MeditationScreen() {
 
     return (
         <Container style={styles.container}>
-            {/* Header */}
-            <View style={styles.header}>
-                <TouchableOpacity
-                    onPress={() => isRunning ? stopSession() : router.back()}
-                    activeOpacity={0.7}
-                    style={styles.backButton}
-                >
-                    <Text style={styles.backArrow}>‹</Text>
-                </TouchableOpacity>
-                <Text style={styles.headerTitle}>Meditation</Text>
-                <View style={styles.placeholder} />
-            </View>
-
             <ScrollView
                 style={styles.scrollView}
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
             >
-                {/* Section Title */}
-                <View style={styles.titleSection}>
-                    <Text style={styles.sectionTitle}>
-                        Ask For Inspiration. Relax.{'\n'}Don’t Struggle
-                    </Text>
+                {/* Header */}
+                <View style={styles.header}>
+                    <TouchableOpacity
+                        onPress={() => isRunning ? stopSession() : router.back()}
+                        activeOpacity={0.7}
+                        style={styles.backButton}
+                    >
+                        <Text style={styles.backArrow}>‹</Text>
+                    </TouchableOpacity>
                 </View>
 
-                {/* Quote Card */}
-                <View style={styles.quoteCard}>
-                    <Text style={styles.quoteText}>
-                        “Here we ask God for inspiration, an{'\n'}
-                        intuitive thought or a decision.{'\n'}
-                        We relax and take it easy. We{'\n'}
-                        don’t struggle.”
+                {/* Title Section */}
+                <View style={styles.titleSection}>
+                    <Text style={styles.title}>Anchor in Words</Text>
+                    <View style={styles.goldUnderline} />
+                </View>
+
+                {/* Subtitle */}
+                <View style={styles.subtitleSection}>
+                    <Text style={styles.subtitleText}>
+                        Today's spiritual reading is from{'\n'}Sample Scripture
                     </Text>
                 </View>
 
@@ -147,10 +128,16 @@ export default function MeditationScreen() {
                 <View style={styles.instructionsSection}>
                     <Text style={styles.instructionsLabel}>INSTRUCTIONS:</Text>
                     <Text style={styles.instructionsText}>
-                        Sit Quietly. Relax. Ask
+                        Let the words wash over you. Read aloud. Listen. Absorb. Reflect
                     </Text>
-                    <Text style={styles.instructionsQuote}>
-                        “God, what would You have me do today?”
+                </View>
+
+                {/* Scripture Card */}
+                <View style={styles.scriptureCard}>
+                    <Text style={styles.scriptureAnchorLabel}>Today's Spiritual Anchor:</Text>
+                    <Text style={styles.scriptureTitle}>Sample Scripture</Text>
+                    <Text style={styles.scriptureBody}>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt et labore et dolore magna aliquam. Ut enim ad minim veniam, quis nostrud exerc. Irure dolor in reprehend incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse molestiae cilum. Tia non ob ea solued incom deraud facilis est er expedit distinct. Nam liber te conscient to factor tum poen legum odioque civuda et tam. Neque pecun modut est neque nonor et imper ned libidig met, Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt et labore et dolore magna aliquam. Ut enim ad minim veniam, quis nostrud exerc. Irure dolor in reprehend incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse molestiae cilum. Tia non ob ea solued incom deraud facilis est er expedit distinct. Nam liber te conscient to factor tum poen legum odioque civuda et tam. Neque pecun modut est neque nonor et imper ned libidig met,
                     </Text>
                 </View>
 
@@ -186,7 +173,7 @@ export default function MeditationScreen() {
                     </View>
                 )}
 
-                {/* Actions */}
+                {/* Action Buttons */}
                 <View style={styles.actionsContainer}>
                     <TouchableOpacity
                         style={[styles.beginButton, isRunning && styles.stopButton]}
@@ -201,11 +188,10 @@ export default function MeditationScreen() {
                     <TouchableOpacity
                         style={styles.skipButton}
                         activeOpacity={0.7}
-                        onPress={() => router.push('/capture-inspiration')}
+                        onPress={() => router.push('/morning/dr-bob/two-way-receive')}
                     >
                         <Text style={styles.skipButtonText}>Skip Timer</Text>
                     </TouchableOpacity>
-
                 </View>
             </ScrollView>
 
@@ -235,96 +221,110 @@ const styles = StyleSheet.create({
         backgroundColor: '#000000',
         paddingTop: Platform.OS === 'web' ? 16 : 0,
     },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 20,
-        paddingTop: 20,
-        paddingBottom: 16,
-    },
-    backButton: {
-        width: 44,
-        height: 44,
-        borderRadius: 22,
-        backgroundColor: '#1c1c1e',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 10,
-    },
-    backArrow: {
-        fontFamily: 'Inter_400Regular',
-        fontSize: 32,
-        color: '#ffffff',
-        marginTop: -4,
-    },
-    headerTitle: {
-        fontFamily: 'Inter_400Regular',
-        fontSize: 18,
-        color: '#ffffff',
-    },
-    placeholder: {
-        width: 44,
-    },
     scrollView: {
         flex: 1,
     },
     scrollContent: {
         paddingBottom: 40,
     },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 8,
+    },
+    backButton: {
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        backgroundColor: '#2a2a2e',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    backArrow: {
+        fontFamily: 'Inter_400Regular',
+        fontSize: 24,
+        color: '#ffffff',
+        marginTop: -2,
+    },
     titleSection: {
         paddingHorizontal: 24,
-        marginTop: 20,
-        marginBottom: 32,
+        paddingTop: 16,
+        paddingBottom: 8,
     },
-    sectionTitle: {
-        fontFamily: 'Inter_400Regular',
-        fontSize: 22,
+    title: {
+        fontFamily: 'Inter_700Bold',
+        fontSize: 28,
         color: '#ffffff',
-        lineHeight: 32,
+        marginBottom: 10,
     },
-    quoteCard: {
-        backgroundColor: '#2c2514',
-        marginHorizontal: 24,
-        borderRadius: 16,
-        padding: 24,
-        marginBottom: 32,
+    goldUnderline: {
+        height: 4,
+        backgroundColor: '#D4A843',
+        borderRadius: 2,
+        width: '100%',
     },
-    quoteText: {
+    subtitleSection: {
+        paddingHorizontal: 24,
+        paddingTop: 16,
+        paddingBottom: 8,
+        alignItems: 'center',
+    },
+    subtitleText: {
         fontFamily: 'Inter_400Regular',
-        fontSize: 16,
-        color: '#d1b88a',
+        fontSize: 14,
+        color: '#999999',
         textAlign: 'center',
-        lineHeight: 28,
+        lineHeight: 22,
     },
     instructionsSection: {
         paddingHorizontal: 24,
-        marginBottom: 48,
+        paddingTop: 8,
+        paddingBottom: 20,
     },
     instructionsLabel: {
         fontFamily: 'Inter_700Bold',
         fontSize: 12,
         color: '#999999',
-        letterSpacing: 1.2,
-        marginBottom: 16,
+        letterSpacing: 1.5,
+        marginBottom: 8,
     },
     instructionsText: {
         fontFamily: 'Inter_400Regular',
-        fontSize: 18,
+        fontSize: 16,
         color: '#ffffff',
-        lineHeight: 28,
-        marginBottom: 4,
+        lineHeight: 24,
     },
-    instructionsQuote: {
+    scriptureCard: {
+        backgroundColor: '#1a1a1a',
+        marginHorizontal: 24,
+        borderRadius: 16,
+        padding: 20,
+        marginBottom: 32,
+    },
+    scriptureAnchorLabel: {
         fontFamily: 'Inter_400Regular',
-        fontSize: 18,
+        fontSize: 12,
+        color: '#888888',
+        marginBottom: 12,
+    },
+    scriptureTitle: {
+        fontFamily: 'Inter_700Bold',
+        fontSize: 24,
         color: '#ffffff',
-        lineHeight: 28,
-        fontStyle: 'italic',
+        marginBottom: 16,
+    },
+    scriptureBody: {
+        fontFamily: 'Inter_400Regular',
+        fontSize: 14,
+        color: '#cccccc',
+        lineHeight: 22,
     },
     timerSection: {
         alignItems: 'center',
-        marginBottom: 48,
+        paddingHorizontal: 24,
+        marginBottom: 24,
     },
     timerLabel: {
         fontFamily: 'Inter_400Regular',
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#1c1c1e',
         borderRadius: 30,
         padding: 4,
-        width: '90%',
+        width: '100%',
     },
     timerOption: {
         flex: 1,
@@ -361,12 +361,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     beginButton: {
-        backgroundColor: '#FFD54F',
+        backgroundColor: '#E8B931',
         width: '100%',
         paddingVertical: 18,
         borderRadius: 30,
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 16,
     },
     beginButtonText: {
         fontFamily: 'Inter_700Bold',
@@ -398,7 +398,7 @@ const styles = StyleSheet.create({
         height: 250,
         borderRadius: 125,
         borderWidth: 4,
-        borderColor: '#FFD54F',
+        borderColor: '#E8B931',
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: 60,

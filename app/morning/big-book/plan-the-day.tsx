@@ -108,7 +108,7 @@ export default function PlanTheDayScreen() {
                     {/* Continue Button */}
                     <TouchableOpacity
                         style={styles.continueButton}
-                        onPress={() => router.push('/check-guidance')}
+                        onPress={() => router.push('/morning/big-book/check-guidance')}
                         activeOpacity={0.8}
                     >
                         <Text style={styles.continueButtonText}>Continue</Text>

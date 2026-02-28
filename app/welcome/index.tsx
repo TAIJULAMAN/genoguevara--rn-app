@@ -41,7 +41,7 @@ export default function WelcomeScreen() {
                 <TouchableOpacity
                     style={styles.button}
                     activeOpacity={0.8}
-                    onPress={() => router.push('/reminders')}
+                    onPress={() => router.push('/welcome/reminders')}
                 >
                     <Text style={styles.buttonText}>Continue</Text>
                 </TouchableOpacity>

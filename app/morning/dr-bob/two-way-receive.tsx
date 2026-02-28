@@ -19,9 +19,9 @@ export default function TwoWayReceiveScreen() {
 
     const handleContinue = () => {
         if (selectedOption === 'app') {
-            router.push('/dr-bob-write');
+            router.push('/morning/dr-bob/write');
         } else if (selectedOption === 'paper') {
-            router.push('/check-guidance');
+            router.push('/morning/big-book/check-guidance');
         }
     };
 

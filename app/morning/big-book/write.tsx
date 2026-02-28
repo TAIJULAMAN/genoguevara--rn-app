@@ -12,17 +12,13 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useAppContext } from '../../context/AppContext';
+import { useAppContext } from '../../../context/AppContext';
 
-export default function DrBobWriteInAppScreen() {
+export default function WriteInAppScreen() {
     const router = useRouter();
     const { addJournalEntry } = useAppContext();
     const [note, setNote] = useState('');
     const [timeLeft, setTimeLeft] = useState(1200);
-    const [isListening, setIsListening] = useState(false);
-    const [recognition, setRecognition] = useState<any>(null);
-
-    const Container = Platform.OS === 'web' ? View : SafeAreaView;
 
     const handleSave = () => {
         if (note.trim().length === 0) {
@@ -35,14 +31,18 @@ export default function DrBobWriteInAppScreen() {
         }
 
         addJournalEntry({
-            title: 'Dr. Bob – Two-Way Prayer',
+            title: 'Two-Way Prayer',
             preview: note.substring(0, 100) + (note.length > 100 ? '...' : ''),
             content: note,
             type: 'morning',
         });
 
-        router.push('/check-guidance');
+        router.push('/morning/big-book/check-guidance');
     };
+    const [isListening, setIsListening] = useState(false);
+    const [recognition, setRecognition] = useState<any>(null);
+
+    const Container = Platform.OS === 'web' ? View : SafeAreaView;
 
     // Initialize Speech Recognition
     useEffect(() => {
@@ -56,17 +56,22 @@ export default function DrBobWriteInAppScreen() {
 
             recognitionInstance.onresult = (event: any) => {
                 let finalTranscript = '';
+
                 for (let i = event.resultIndex; i < event.results.length; ++i) {
                     if (event.results[i].isFinal) {
                         finalTranscript += event.results[i][0].transcript;
                     }
                 }
+
                 if (finalTranscript) {
                     setNote(prev => prev + (prev.length > 0 ? ' ' : '') + finalTranscript);
                 }
             };
 
-            recognitionInstance.onend = () => setIsListening(false);
+            recognitionInstance.onend = () => {
+                setIsListening(false);
+            };
+
             recognitionInstance.onerror = (event: any) => {
                 console.error('Speech recognition error:', event.error);
                 setIsListening(false);
@@ -81,6 +86,7 @@ export default function DrBobWriteInAppScreen() {
             alert('Speech recognition is not supported in this browser.');
             return;
         }
+
         if (isListening) {
             recognition.stop();
         } else {
@@ -93,14 +99,17 @@ export default function DrBobWriteInAppScreen() {
         }
     };
 
+    // Helper to format time
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     };
 
+    // Timer logic
     useEffect(() => {
         if (timeLeft <= 0) return;
+
         const interval = setInterval(() => {
             setTimeLeft((prev) => {
                 if (prev <= 1) {
@@ -110,6 +119,7 @@ export default function DrBobWriteInAppScreen() {
                 return prev - 1;
             });
         }, 1000);
+
         return () => clearInterval(interval);
     }, [timeLeft]);
 
@@ -124,7 +134,7 @@ export default function DrBobWriteInAppScreen() {
                 >
                     <Text style={styles.closeIcon}>✕</Text>
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Dr. Bob – Write</Text>
+                <Text style={styles.headerTitle}>Two-Way Prayer</Text>
                 <View style={styles.headerActions}>
                     <TouchableOpacity
                         style={[styles.actionButton, isListening && styles.actionButtonActive]}
@@ -159,7 +169,7 @@ export default function DrBobWriteInAppScreen() {
                             Your Quiet Time is sacred. If you still feel inspired, take your time and keep writing.
                         </Text>
                         <Text style={styles.subTitle}>
-                            When you're ready, we'll move on to test what came through.
+                            When you’re ready, we’ll move on to test what came through.
                         </Text>
                     </View>
 
@@ -179,14 +189,14 @@ export default function DrBobWriteInAppScreen() {
                             multiline
                             autoFocus
                             textAlignVertical="top"
-                            selectionColor="#D4A843"
+                            selectionColor="#FFD54F"
                         />
                     </View>
 
                     {/* Continue Button */}
                     <TouchableOpacity
                         style={styles.continueButton}
-                        onPress={() => router.push('/dr-bob-test')}
+                        onPress={() => router.push('/morning/big-book/check-guidance')}
                         activeOpacity={0.8}
                     >
                         <Text style={styles.continueButtonText}>Continue</Text>
@@ -221,7 +231,7 @@ const styles = StyleSheet.create({
     },
     closeIcon: {
         fontSize: 20,
-        color: '#D4A843',
+        color: '#FFD54F',
     },
     headerTitle: {
         fontFamily: 'Inter_400Regular',
@@ -241,11 +251,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     actionButtonActive: {
-        backgroundColor: '#D4A843',
+        backgroundColor: '#FFD54F',
     },
     actionIcon: {
         fontSize: 20,
-        color: '#D4A843',
+        color: '#FFD54F',
     },
     actionIconActive: {
         color: '#000000',
@@ -254,7 +264,7 @@ const styles = StyleSheet.create({
         width: 44,
         height: 44,
         borderRadius: 22,
-        backgroundColor: '#3a3a3e',
+        backgroundColor: '#3a3a3e', // Slightly lighter gray like the screenshot
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -292,7 +302,7 @@ const styles = StyleSheet.create({
     timerText: {
         fontFamily: 'Inter_700Bold',
         fontSize: 20,
-        color: '#D4A843',
+        color: '#FFD54F',
     },
     inputContainer: {
         backgroundColor: '#161618',
@@ -309,7 +319,7 @@ const styles = StyleSheet.create({
         lineHeight: 28,
     },
     continueButton: {
-        backgroundColor: '#E8B931',
+        backgroundColor: '#FFD54F',
         paddingVertical: 18,
         borderRadius: 30,
         alignItems: 'center',

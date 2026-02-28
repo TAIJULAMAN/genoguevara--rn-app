@@ -67,7 +67,7 @@ export default function SerenityPrayerScreen() {
                 <TouchableOpacity
                     style={styles.continueButton}
                     activeOpacity={0.8}
-                    onPress={() => router.push('/anchor-words')}
+                    onPress={() => router.push('/morning/dr-bob/anchor-words')}
                 >
                     <Text style={styles.continueButtonText}>Continue</Text>
                 </TouchableOpacity>

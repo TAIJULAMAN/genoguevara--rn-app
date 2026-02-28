@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
     Platform,
     ScrollView,
@@ -9,10 +10,30 @@ import {
 import { SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 
-export default function MorningPrayerScreen() {
+export default function CheckGuidanceScreen() {
     const router = useRouter();
+    const [selections, setSelections] = useState({
+        selfish: false,
+        dishonest: false,
+        fearDriven: false,
+        selfCentered: false,
+    });
 
     const Container = Platform.OS === 'web' ? View : SafeAreaView;
+
+    const toggleSelection = (key: keyof typeof selections) => {
+        setSelections(prev => ({
+            ...prev,
+            [key]: !prev[key]
+        }));
+    };
+
+    const checkItems = [
+        { id: 'selfish', label: 'Is this selfish?' },
+        { id: 'dishonest', label: 'Is this dishonest?' },
+        { id: 'fearDriven', label: 'Is this fear-driven?' },
+        { id: 'selfCentered', label: 'Is this self-centered?' },
+    ];
 
     return (
         <Container style={styles.container}>
@@ -25,7 +46,7 @@ export default function MorningPrayerScreen() {
                 >
                     <Text style={styles.backArrow}>‹</Text>
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Morning Prayer</Text>
+                <Text style={styles.headerTitle}>Check guidance</Text>
                 <View style={styles.placeholder} />
             </View>
 
@@ -34,19 +55,18 @@ export default function MorningPrayerScreen() {
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
             >
-                {/* Section Title */}
-                <View style={styles.titleSection}>
-                    <Text style={styles.sectionTitle}>“Upon Awakening”</Text>
+                {/* Sub-header with yellow bar */}
+                <View style={styles.subHeaderSection}>
+                    <Text style={styles.subHeaderTitle}>
+                        Trust but test
+                    </Text>
                     <View style={styles.yellowBar} />
                 </View>
 
                 {/* Quote Card */}
                 <View style={styles.quoteCard}>
                     <Text style={styles.quoteText}>
-                        “On awakening let us think about the{'\n'}
-                        twenty-four hours ahead...{'\n'}
-                        Before we begin, we ask God to direct{'\n'}
-                        our thinking...”
+                        “I was to test my thinking by the new God-consciousness within...”
                     </Text>
                 </View>
 
@@ -54,25 +74,38 @@ export default function MorningPrayerScreen() {
                 <View style={styles.instructionsSection}>
                     <Text style={styles.instructionsLabel}>INSTRUCTIONS:</Text>
                     <Text style={styles.instructionsText}>
-                        Pause before launching into the day. Ask God to guide your thinking — especially that it be free from fear, self-pity, or selfish motives.
+                        Not every thought is from God. Run it through the spiritual test.
                     </Text>
                 </View>
 
-                {/* Prayer Block */}
-                <View style={styles.prayerBlock}>
-                    <Text style={styles.prayerText}>
-                        God, direct my thinking _ especially that it be divorced from self- pity dishonest or self- seeking motives
-                    </Text>
+                {/* Check List */}
+                <View style={styles.checkListSection}>
+                    {checkItems.map((item) => (
+                        <TouchableOpacity
+                            key={item.id}
+                            style={styles.checkRow}
+                            onPress={() => toggleSelection(item.id as keyof typeof selections)}
+                            activeOpacity={0.7}
+                        >
+                            <Text style={styles.checkLabel}>{item.label}</Text>
+                            <Text style={[
+                                styles.selectText,
+                                selections[item.id as keyof typeof selections] && styles.selectedText
+                            ]}>
+                                {selections[item.id as keyof typeof selections] ? 'Selected' : 'Select'}
+                            </Text>
+                        </TouchableOpacity>
+                    ))}
                 </View>
 
-                {/* Button */}
+                {/* Continue Button */}
                 <View style={styles.buttonPadding}>
                     <TouchableOpacity
-                        style={styles.beginButton}
+                        style={styles.continueButton}
+                        onPress={() => router.push('/morning/big-book/obey-and-act')}
                         activeOpacity={0.8}
-                        onPress={() => router.push('/meditation')}
                     >
-                        <Text style={styles.beginButtonText}>Begin Timer</Text>
+                        <Text style={styles.continueButtonText}>Continue</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
@@ -109,8 +142,8 @@ const styles = StyleSheet.create({
         marginTop: -4,
     },
     headerTitle: {
-        fontFamily: 'Inter_500Medium',
-        fontSize: 18,
+        fontFamily: 'Inter_400Regular',
+        fontSize: 22,
         color: '#ffffff',
     },
     placeholder: {
@@ -122,77 +155,89 @@ const styles = StyleSheet.create({
     scrollContent: {
         paddingBottom: 40,
     },
-    titleSection: {
+    subHeaderSection: {
         paddingHorizontal: 24,
         marginTop: 20,
-        marginBottom: 24,
+        marginBottom: 40,
     },
-    sectionTitle: {
+    subHeaderTitle: {
         fontFamily: 'Inter_400Regular',
         fontSize: 22,
         color: '#ffffff',
+        lineHeight: 32,
         marginBottom: 12,
     },
     yellowBar: {
-        height: 3,
+        height: 4,
         backgroundColor: '#FFD54F',
-        width: '100%',
+        width: '60%',
+        borderRadius: 2,
     },
     quoteCard: {
         backgroundColor: '#2c2514',
         marginHorizontal: 24,
         borderRadius: 16,
-        padding: 24,
-        marginBottom: 32,
+        padding: 30,
+        marginBottom: 40,
     },
     quoteText: {
         fontFamily: 'Inter_400Regular',
-        fontSize: 16,
+        fontSize: 18,
         color: '#d1b88a',
         textAlign: 'center',
         lineHeight: 28,
     },
     instructionsSection: {
         paddingHorizontal: 24,
-        marginBottom: 32,
+        marginBottom: 40,
     },
     instructionsLabel: {
         fontFamily: 'Inter_700Bold',
         fontSize: 12,
-        color: '#999999',
+        color: '#666666',
         letterSpacing: 1.2,
         marginBottom: 12,
     },
     instructionsText: {
         fontFamily: 'Inter_400Regular',
         fontSize: 16,
-        color: '#ffffff',
+        color: '#888888',
         lineHeight: 24,
     },
-    prayerBlock: {
-        backgroundColor: '#3a3116',
-        paddingVertical: 50,
+    checkListSection: {
         paddingHorizontal: 24,
-        width: '100%',
-        marginBottom: 40,
+        gap: 32,
+        marginBottom: 60,
     },
-    prayerText: {
+    checkRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    checkLabel: {
         fontFamily: 'Inter_400Regular',
-        fontSize: 28,
+        fontSize: 18,
         color: '#ffffff',
-        lineHeight: 42,
-        textAlign: 'left',
+    },
+    selectText: {
+        fontFamily: 'Inter_400Regular',
+        fontSize: 16,
+        color: '#444444',
+    },
+    selectedText: {
+        color: '#FFD54F',
+        fontFamily: 'Inter_700Bold',
     },
     buttonPadding: {
         paddingHorizontal: 24,
     },
-    beginButton: {
+    continueButton: {
         backgroundColor: '#FFD54F',
         paddingVertical: 18,
         borderRadius: 30,
         alignItems: 'center',
     },
-    beginButtonText: {
+    continueButtonText: {
         fontFamily: 'Inter_700Bold',
         fontSize: 18,
         color: '#000000',

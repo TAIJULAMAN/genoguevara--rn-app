@@ -95,7 +95,7 @@ export default function ShareAndDiscernScreen() {
             <View style={styles.bottomSection}>
                 <TouchableOpacity
                     style={styles.continueButton}
-                    onPress={() => router.push('/final-prayer')}
+                    onPress={() => router.push('/morning/dr-bob/final-prayer')}
                     activeOpacity={0.8}
                 >
                     <Text style={styles.continueButtonText}>Continue</Text>

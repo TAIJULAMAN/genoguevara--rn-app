@@ -101,7 +101,7 @@ export default function HomeScreen() {
                             <TouchableOpacity
                                 style={styles.dropdownItem}
                                 activeOpacity={0.7}
-                                onPress={() => { setMenuOpen(false); router.push('/journal'); }}
+                                onPress={() => { setMenuOpen(false); router.push('/settings/journal'); }}
                             >
                                 <Text style={styles.dropdownIcon}>📖</Text>
                                 <Text style={styles.dropdownLabel}>Journal</Text>
@@ -137,9 +137,9 @@ export default function HomeScreen() {
                         activeOpacity={0.8}
                         onPress={() => {
                             if (selectedPath === 'dr_bob') {
-                                router.push('/dr-bob');
+                                router.push('/morning/dr-bob');
                             } else {
-                                router.push('/big-book');
+                                router.push('/morning/big-book');
                             }
                         }}
                     >

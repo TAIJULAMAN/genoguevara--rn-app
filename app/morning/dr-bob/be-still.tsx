@@ -97,7 +97,7 @@ export default function BeStillScreen() {
                 <TouchableOpacity
                     style={styles.continueButton}
                     activeOpacity={0.8}
-                    onPress={() => router.push('/serenity-prayer')}
+                    onPress={() => router.push('/morning/dr-bob/serenity-prayer')}
                 >
                     <Text style={styles.continueButtonText}>Continue</Text>
                 </TouchableOpacity>

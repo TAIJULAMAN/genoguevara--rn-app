@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useAppContext } from '../../context/AppContext';
+import { useAppContext } from '../../../context/AppContext';
 
 type TagType = 'Honest' | 'Pure' | 'Unselfish' | 'Loving' | 'Unsure' | null;
 
@@ -149,7 +149,7 @@ export default function DrBobTestScreen() {
             <View style={styles.bottomSection}>
                 <TouchableOpacity
                     style={styles.continueButton}
-                    onPress={() => router.push('/share-discern')}
+                    onPress={() => router.push('/morning/dr-bob/share-discern')}
                     activeOpacity={0.8}
                 >
                     <Text style={styles.continueButtonText}>Continue</Text>

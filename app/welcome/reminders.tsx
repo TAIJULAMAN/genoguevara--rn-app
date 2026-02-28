@@ -36,7 +36,7 @@ export default function RemindersScreen() {
                 <TouchableOpacity
                     style={styles.button}
                     activeOpacity={0.8}
-                    onPress={() => router.push('/selection')}
+                    onPress={() => router.push('/welcome/selection')}
                 >
                     <Text style={styles.buttonText}>Set reminders permission</Text>
                 </TouchableOpacity>
